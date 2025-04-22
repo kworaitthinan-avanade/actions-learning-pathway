@@ -1,0 +1,28 @@
+# .github/workflows/env-example.yml
+name: Environment Based Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: development
+
+jobs:
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment }}
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Print environment
+        run: echo "Deploying to ${{ github.event.inputs.environment }}"
+
+      - name: Show secret and variable
+        run: |
+          echo "Secret: $MY_SECRET_NAME"
+          echo "Variable: $MY_VARIABLE_NAME"
+        env:
+          MY_SECRET_NAME: ${{ secrets.MY_SECRET_NAME }}
+          MY_VARIABLE_NAME: ${{ vars.MY_VARIABLE_NAME }}
