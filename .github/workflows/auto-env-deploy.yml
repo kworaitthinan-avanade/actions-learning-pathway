@@ -1,0 +1,29 @@
+# .github/workflows/auto-env-deploy.yml
+
+name: Auto Environment Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  deploy:
+    name: Deploy based on branch
+    runs-on: ubuntu-latest
+
+    # Automatically select environment based on branch
+    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
+
+    steps:
+      - name: Show current environment
+        run: echo "Deploying to ${{ github.ref_name == 'main' && 'production' || 'development' }}"
+
+      - name: Use environment secrets/variables
+        run: |
+          echo "Secret: $MY_SECRET_NAME"
+          echo "Variable: $MY_VARIABLE_NAME"
+        env:
+          MY_SECRET_NAME: ${{ secrets.MY_SECRET_NAME }}
+          MY_VARIABLE_NAME: ${{ vars.MY_VARIABLE_NAME }}
